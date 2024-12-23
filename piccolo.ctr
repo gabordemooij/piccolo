@@ -1,0 +1,609 @@
+# ~ Piccolo ~
+# Versie voor PC (1.0)
+# code geschreven door Gabor de Mooij 
+# muziek door Bobby Babalas 
+# (c) copyright 2024
+# alle rechten voorbehouden
+
+>> media  := Media nieuw.
+>> pakket := Pakketje nieuw: ['data'].
+media koppel: pakket.
+
+>> spring-geluid := Geluid nieuw: ['spring.ogg'].
+media effect: 2000 opties: spring-geluid.
+
+>> bots-geluid := Geluid nieuw: ['bots.ogg'].
+>> bonus-geluid := Geluid nieuw: ['bonus.ogg'].
+>> bezorgd-geluid := Geluid nieuw: ['bezorgd.ogg'].
+>> pakop-geluid := Geluid nieuw: ['pakop.ogg'].
+>> tik := Geluid nieuw: ['tik.ogg'].
+>> level-einde := Muziek nieuw: ['levelcomplete.mp3'].
+>> oranje := Kleur nieuw rood: 180 groen: 93 blauw: 12.
+>> rood := Kleur nieuw rood: 250 groen: 0 blauw: 0.
+>> wit := Kleur nieuw rood: 255 groen: 255 blauw: 255.
+
+media breedte: 640 hoogte: 480.
+>> plaatjes := Reeks nieuw.
+>> info-zichtbaar := Nee.
+plaatjes bij: ['bericht:argument:'] doen: { :bericht :argument
+	zelf elk: { :i :plaatje
+		{
+			plaatje bericht: bericht argumenten: Reeks nieuw ; argument.
+		} afhandelen: { :e
+			<- Niets.
+		}, start.
+	}.
+}.
+
+>> Afbeelding := Plaatje nieuw.
+
+Afbeelding bij: ['nieuw:'] doen: { :bron
+	>> a := zelf nieuw: bron.
+	plaatjes toevoegen: a.
+	<- a.
+}.
+
+Afbeelding bij: ['nieuw'] doen: {
+	>> a := zelf nieuw.
+	plaatjes toevoegen: a.
+	<- a.
+}.
+
+>> Koffer := Afbeelding nieuw.
+
+Koffer bij: ['koffer?'] doen: {
+	<- Ja.
+}.
+
+Koffer bij: ['startplek'] doen: {
+	zelf x:120 y:684, zichtbaar: Ja.
+}.
+
+>> Lift := Afbeelding nieuw.
+
+Lift bij: ['nieuw'] doen: {
+    >> lift := zelf nieuw.
+    lift bron: ['lift.png'], installeer.
+    <- lift.
+}.
+
+Lift bij: ['installeer'] doen: {
+    eigen cabine := Afbeelding nieuw: ['cabine.png'].
+    eigen cabine zichtbaar: Nee.
+}.
+
+Lift bij: ['zichtbaar:'] doen: { :janee
+	zelf zichtbaar: janee.
+    eigen cabine zichtbaar: janee.
+}.
+
+Lift bij: ['start'] doen: {
+    eigen cabine spook: Ja,
+    fixeer: Ja,
+    x: zelf x? y: 69.
+}.
+
+Lift bij: ['omhoog'] doen: {
+        zelf x: zelf x? y: 695,
+        naar-x: zelf x? y:214. 
+        eigen cabine x: zelf x? y:0,
+        naar-x:zelf x? y:-483. 
+}.
+
+Lift bij: ['omlaag'] doen: {
+        zelf  x: zelf x? y: 214, 
+        naar-x:zelf x? y:695.
+        eigen cabine x:zelf x? y:-483, 
+        naar-x:zelf x? y:0.
+}.
+
+Lift bij: ['bestemming'] doen: {
+    (zelf y? < 300) ja: {
+        zelf omlaag.        
+    }, anders: {
+        zelf omhoog.
+    }.
+}.
+
+>> Deur := Afbeelding nieuw.
+>> open-deur := Niets.
+
+Deur bij: ['nieuw:'] doen: { :nr
+	>> deur := zelf nieuw verf: nr, dicht.
+	<- deur.
+}.
+
+Deur bij: ['verf:'] doen: { :kleurnummer
+	eigen plaatje-dicht := ['deur'] + kleurnummer + ['.png'].
+}.
+
+Deur bij: ['open:'] doen: { :kleurnummer
+	zelf bron: ['bezorgd'] + kleurnummer + ['.png'].
+	open-deur := zelf.
+	media wekker: 2 over: 2000.
+}.
+
+Deur bij: ['dicht'] doen: {
+	zelf bron: eigen plaatje-dicht.
+	open-deur := Niets.
+}.
+
+>> regen := Afbeelding nieuw: ['regen.png'].
+>> sneeuw := Afbeelding nieuw: ['sneeuw.png'].
+>> lantaarn := Afbeelding nieuw: ['lantaarn.png'].
+>> pui := Afbeelding nieuw: ['pui.png'].
+>> sneeuwpui := Afbeelding nieuw: ['sneeuwpui.png'].
+>> kerstboom := Afbeelding nieuw: ['kerstboom.png'].
+>> vloer := Afbeelding nieuw: ['vloer.png'].
+>> deuren := Reeks nieuw.
+	{ :i deuren toevoegen: (Deur nieuw: i). } * 5.
+
+deuren toevoegen: deuren ? 1. # deur 6
+deuren toevoegen: deuren ? 4. # deur 7
+deuren toevoegen: deuren ? 2. # deur 8
+>> muziek := Niets.
+>> muur := Afbeelding nieuw: ['muur.png'].
+>> platform1 := Afbeelding nieuw: ['platform.png'].
+>> platform2 := Afbeelding nieuw: ['platform2.png'].
+>> platform3 := Afbeelding nieuw: ['platform3.png'].
+>> platform4 := Afbeelding nieuw: ['platform.png'].
+>> platform5 := Afbeelding nieuw: ['platform2.png'].
+>> platform6 := Afbeelding nieuw: ['platform3.png'].
+>> lift1 := Lift nieuw x: 399 y: 292.
+>> lift2 := Lift nieuw x: 728 y: 292.
+>> piccolo := Afbeelding nieuw.
+>> overloop1 := Afbeelding nieuw: ['overloop.png'], spook: Ja.
+>> overloop2 := Afbeelding nieuw: ['overloop.png'], spook: Ja.
+>> overloop3 := Afbeelding nieuw: ['overloop.png'], spook: Ja.
+>> overloop4 := Afbeelding nieuw: ['overloop.png'], spook: Ja.
+>> Bonus := Afbeelding nieuw: ['bonus.png'], spook: Ja, filmrol: 2 snelheid: 50, autospeel: Ja.
+
+Bonus bij: ['verbergen'] doen: {
+	zelf x: -100 y: -100.
+}.
+
+Bonus bij: ['tonen'] doen: {
+	zelf x: 930 y: 430.
+}.
+
+Bonus bij: ['wachten'] doen: {
+	media wekker: 4 over: 9000.
+}.
+
+>> Tegenstander := Afbeelding nieuw.
+
+Tegenstander bij: ['tegenstander?'] doen: { <- Ja. }.
+
+Tegenstander bij: ['start-x:y:'] doen: { :x :y
+	eigen start-x := x.
+	eigen start-y := y.
+	zelf x: x y: y.
+}.
+
+Tegenstander bij: ['start'] doen: {
+		>> snelheid := 0,8.
+		level geval: 2 doen: { 
+			snelheid := 0,9.
+		}, geval: 3 doen: { 
+			snelheid := 1,0.
+		}, geval: 4 doen: { 
+			snelheid := 1,1.
+		}.
+		
+		eigen start-y < 200 ja: { snelheid optellen: 0,1. }.
+		eigen start-y < 500 ja: { snelheid optellen: 0,1. }.
+		
+        zelf
+        snelheid: snelheid,
+        zwaartekracht: 1,
+        filmrol: 2 snelheid: 5 + (snelheid * 10),
+        spook: Ja,
+        actief: Ja,
+        x: eigen start-x y: eigen start-y,
+        naar-x: 250 y: zelf y?.
+}.
+
+Tegenstander bij: ['bestemming'] doen: {
+    (zelf x? ≤ 250) ja: {  
+        zelf naar-x: 900 y: zelf y?.
+    }, nee: {
+        zelf naar-x: 250 y: zelf y?.
+    }.
+}.
+
+>> tegenstanders := Reeks nieuw
+	- ( Tegenstander nieuw start-x:850 y:615 )
+	- ( Tegenstander nieuw start-x:500 y:366 )
+	- ( Tegenstander nieuw start-x:300 y:120 ).
+
+>> font := Lettertype nieuw bron: ['Shortcake.ttf'] grootte: 30.
+>> score := Afbeelding nieuw: ['score.png'].
+score inkt: oranje, lettertype: font.
+
+>> limiet := 99.
+>> levens := 3.
+>> piccolo1 := Afbeelding nieuw: ['leven.png'].
+>> piccolo2 := Afbeelding nieuw: ['leven.png'].
+>> piccolo3 := Afbeelding nieuw: ['leven.png'].
+>> bobby := Afbeelding nieuw: ['bobby.png'].
+>> citrine := Afbeelding nieuw: ['citrine.png'].
+>> kalender := Afbeelding nieuw: ['maart21.png'].
+>> punten := 0.
+>> bordpunten := 0.
+>> topscore := 0.
+>> level := 1.
+>> klok := Afbeelding nieuw: ['klok.png'].
+klok lettertype: font, inkt: oranje, schrijf: limiet.
+
+media breedte: 640 hoogte: 480.
+
+piccolo bij: ['start'] doen: {
+    eigen draagt := 0.
+    zelf
+    bron: ['piccolo.png'],
+    x: 50 y: 600,
+    springhoogte: 50,
+    zwaartekracht: 1, 
+    versnelling: 0,4,
+    snelheid: 1,5,
+    weerstand: 0,01,
+    filmrol: 2 snelheid: 25,
+    actief: Ja,
+    bevriezen: Nee,
+    spook: Nee,
+    besturing: 1.
+}.
+
+media effect: 1 opties: 1.
+media bij: ['wekker:'] doen: { :n
+    (n = 1) ja: {
+    	levens aftrekken: 1.
+		(levens = 2) ja: { piccolo3 zichtbaar: Nee. }.
+		(levens = 1) ja: { piccolo2 zichtbaar: Nee. }.
+		(levens = 0) ja: { piccolo1 zichtbaar: Nee. }.
+		levens > 0 ja: {
+			piccolo  start.
+			koffer startplek.
+        }, anders: {
+			media einde.
+        }.
+    }.
+    (n = 2) ja: { open-deur dicht. }.
+    (n = 3) ja: {
+		limiet aftrekken: 1.
+		limiet > -1 ja: {
+			klok schrijf: limiet laag.
+			limiet < 15 ja: { klok inkt: rood. tik afspelen. }.
+			media wekker: 3 over: 1000.
+		}, anders: {
+			piccolo besturing: Nee, actief: Nee.
+			levens := 0.
+			media einde.
+		}.
+    }.
+    (n = 4) ja: { Bonus tonen. }.
+    (n = 5) ja: { media einde. }.
+    (n = 6) ja: { koffers volgende. }.
+    (n = 10) ja: {
+		info-zichtbaar :=  info-zichtbaar niet.
+		infoscherm zichtbaar: info-zichtbaar.
+		media wekker: 10 over: 9000.
+    }.
+}.
+
+piccolo bij: ['inactief'] doen: {
+	zelf zichtbaar: Nee, actief: Nee, spook: Ja. 
+}.
+
+piccolo bij: ['bots:'] doen: { :ander
+    (ander tegenstander? = Ja) ja: {     
+        bots-geluid afspelen.
+        zelf 
+        bron: ['onderuit.png'], filmrol: 1 snelheid: 1,
+        actief: Nee, snelheid: 0, springhoogte: 0, bevriezen: Ja.
+        media wekker: 1 over: 2000.
+    }.
+    (ander = Bonus) ja: {
+		bonus-geluid afspelen.
+		Bonus verbergen.
+		punten optellen: 15.
+    }.   
+    (ander koffer? = Ja en: eigen draagt = 0) ja: {
+		pakop-geluid afspelen.
+        >> koffernr := koffers welke?.
+        koffer zichtbaar: Nee.
+        piccolo bron: ['piccolo'] + koffernr + ['.png'].        
+        eigen draagt := koffernr.
+    }.
+    >> doel := deuren ? eigen draagt.
+    (ander = doel) ja: {
+		bezorgd-geluid afspelen.
+		>> koffernr := koffers welke?.
+		doel open: eigen draagt.
+        eigen draagt := 0.
+        punten optellen: (
+			(levens * 10) + (koffernr * 5) + limiet
+        ).
+        (Reeks nieuw ; 2 ; 4 ; 6 ; 8) zoek: koffernr, ja: {
+			media wekker: 3 over: -1. # zet teller uit
+			piccolo inactief.
+        }.
+        koffernr = 8 ja: {
+			media wekker: 5 over: 3000.			
+        }, anders: {
+			piccolo bron: ['piccolo.png'].
+			media wekker: 6 over: 3000.
+		}.
+    }.
+
+}.
+
+>> koffers := Reeks ← 1 ; 2 ; 3 ; 4 ; 5 ; 6 ; 7 ; 8.
+
+koffers bij: ['start'] doen: {
+	eigen teller := 0.
+}.
+
+koffers bij: ['teller:'] doen: { :t
+	eigen teller := t.
+}.
+
+koffers bij: ['volgende'] doen: {
+	(
+		(eigen teller = 2 en: level = 1)  of:
+		(eigen teller = 4 en: level = 2), of:
+		(eigen teller = 6 en: level = 3), of:
+		(eigen teller = 8 en: level = 4)
+	) ja: {
+		level optellen: 1.
+		media einde.
+	}, nee: {
+		eigen teller optellen: 1.
+		koffer bron: ['koffer'] + eigen teller + ['.png'].
+		koffer startplek.
+	}.
+}.
+
+koffers bij: ['welke?'] doen: {
+	<- zelf ? eigen teller.
+}.
+
+>> koffer := Koffer nieuw.
+>> Spel := Object nieuw.
+
+Spel bij: ['start:'] doen: { :niveau
+	limiet := 99. # stel tijdklok opnieuw in
+	klok inkt: oranje.
+	media bij: ['stap'] doen: {
+		bordpunten < punten ja: {
+			>> verschil :=  punten - bordpunten.
+			(verschil > 5) ja: {
+				verschil := 5.
+			}.
+		
+			bordpunten optellen: verschil.
+			score schrijf: bordpunten ruw.
+		}.
+	}.
+	media wekker: 3 over: 1000,
+		  scherm: ['level'] + niveau + ['.png'].
+	media wekker: 5 over: -1, # zet wekkers uit
+		  wekker: 3 over: -1,
+		  wekker: 1 over: -1.
+	media bij: ['stap'] doen: { <- Niets. }.
+}.
+
+Spel bij: ['einde'] doen: {
+	muziek := Muziek nieuw: ['muziek4.mp3'].
+	muziek afspelen.
+	plaatjes zichtbaar: Nee.
+	>> gedichtje := Plaatje nieuw: ['poem.png'].
+	media bij: ['start'] doen: {
+		gedichtje spook: Ja,
+			      fixeer: Ja, 
+			      x: 20 y: 450,
+			      naar-x: 20 y: -600,
+			      snelheid: 0,1.
+	}.
+	media wekker: 5 over: 1000 * 60 * 3, scherm: ['ending.png'].
+}.
+
+Spel bij: ['niveau:'] doen: { :niveau
+	plaatjes zichtbaar: Ja.
+	vloer x: 0 y: 720, muur: Ja.
+    deuren ? 2 x: 912 y: 591, spook: Ja.
+    deuren ? 1 x: 280 y: 334, spook: Ja.
+    deuren ? 3 x: 590 y: 334, spook: Ja.
+    deuren ? 4 x: 280 y: 85, spook: Ja.
+    deuren ? 5 x: 912 y: 85, spook: Ja.
+    muur x: 210 y: 0, muur: Ja.
+    platform1 x: 239 y: 464 , muur: Ja.
+    platform2 x: 525 y: 464 , muur: Ja. 
+    platform3 x: 854 y: 464 , muur: Ja.
+    platform4 x: 239 y: 214 , muur: Ja.
+    platform5 x: 525 y: 214 , muur: Ja.
+    platform6 x: 854 y: 214 , muur: Ja.
+    overloop1 x: 397 y: 464.
+    overloop2 x: 727 y: 464.
+    overloop3 x: 397 y: 214.
+    overloop4 x: 727 y: 214.
+    lift1 muur: Ja, actief: Ja, start omlaag.
+    lift2 muur: Ja, actief: Ja, start omhoog.
+	kalender bron: ['kalender'] + niveau + ['.png'].
+	(Reeks nieuw ; bobby ; citrine ; infoscherm ; kerstboom ; regen ; sneeuw ; lantaarn ; pui ; sneeuwpui ; startknop ) elk: { :n :item
+		item zichtbaar: Nee.
+	}.
+	tegenstanders elk: { :i :tegenstander
+		tegenstander 
+		bron: ['tegenstander'] + ( niveau - 1 * 3 + i ) + ['.png'],
+		start.
+	}.
+	Bonus verbergen wachten.
+	muziek := Muziek nieuw: ['muziek'] + niveau + ['.mp3'].
+	niveau
+	geval: 3 doen: {
+		regen
+			x: -45 y: -30,
+			zichtbaar: Ja,
+			filmrol: 4 snelheid: 90,
+			autospeel: Ja,
+			spook: Ja.
+		pui zichtbaar: Ja, x: 75 y: 500, spook: Ja.
+		lantaarn zichtbaar: Ja, x: 0 y: 400, spook: Ja.
+	},
+	geval: 4 doen: {
+		sneeuw
+			x: -45 y: -30,
+			filmrol: 4 snelheid: 80,
+			autospeel: Ja,
+			zichtbaar: Ja,
+			spook: Ja.
+		sneeuwpui zichtbaar: Ja, x: 1 y: 500, spook: Ja.
+		kerstboom zichtbaar: Ja, x: 530 y: 527, filmrol:2 snelheid: 30, autospeel: Ja,spook: Ja.
+	}.
+    piccolo start.
+    koffers volgende.
+    score x: 0 y: 0, uitlijnen-x: 50 y: 9, inkt: oranje, statisch: Ja.
+    klok x: 181 y: 9, uitlijnen-x: 10 y: 0, statisch: Ja.
+    piccolo1 x: 248 y: 10, statisch: Ja, zichtbaar: Ja.
+    piccolo2 x: 273 y: 10, statisch: Ja, zichtbaar: (levens > 1).
+    piccolo3 x: 297 y: 10, statisch: Ja, zichtbaar: (levens = 3).
+    kalender x: 342 y:13, statisch: Ja.
+    muziek afspelen.
+}.
+
+>> startknop := Afbeelding nieuw: ['startknop.png'], filmrol: 2 snelheid: 40, autospeel: Ja.
+>> exitknop := Afbeelding nieuw: ['exitknop.png'].
+>> infoscherm := Afbeelding nieuw: ['info.png'].
+{
+	media bij: ['start'] doen: {
+		Programma vegen.
+		plaatjes zichtbaar: Nee.
+		muziek := Muziek nieuw: ['titelsong.mp3'], afspelen.
+		media bij: ['toets:'] doen: { :toets
+			(toets = ['Escape']) ja: { Programma einde. }.
+		}, bij: ['toetsin:'] doen: { :toets
+			<- Niets.
+		}.
+
+		exitknop
+			zichtbaar: Ja,
+			statisch: Ja,
+			x: 320 y: 158,
+			bij: ['klik'] doen: {
+				info-zichtbaar nee: {
+					Programma einde.
+				}.
+			}.
+		
+		startknop
+			zichtbaar: Ja,
+			statisch: Ja,
+			actief: Ja,
+			x: 195 y: 153,
+			bij: ['klik'] doen: {
+				info-zichtbaar nee: {
+					zelf zichtbaar: Nee.
+					exitknop zichtbaar: Nee.
+					exitknop x: -100 y: -100.
+					media einde.
+				}.
+			}.
+			
+		citrine
+			zichtbaar: Ja,
+			statisch: Ja,
+			x: 170 y: 250,
+			bij: ['klik'] doen: {
+				info-zichtbaar nee: {
+					media website: ['https://citrine-lang.org'].
+				}.
+			}.
+		
+		bobby
+			zichtbaar: Ja,
+			statisch: Ja,
+			x: 330 y: 250,
+			bij: ['klik'] doen: {
+				info-zichtbaar nee: {
+					media website: ['https://www.youtube.com/channel/UCSGVp_bdm1as-07pV91LVZA'].
+				}.
+			}.
+
+		infoscherm
+				lettertype: font,
+				inkt: wit,
+				zichtbaar: Nee,
+				statisch: Ja,
+				x: 0 y: 0,
+				schrijf: topscore ruw,
+				uitlijnen-x: 450 y: 150.
+	
+		infoscherm bij: ['klik'] doen: {
+			zelf zichtbaar: Nee.
+			info-zichtbaar := Nee.
+		}.
+		media bij: ['gamepadin:'] doen: { :knop
+			knop = ['a'] of: knop = ['b'], of: knop = ['x'], of: knop = ['y'], ja: {
+				info-zichtbaar ja: {
+					infoscherm klik.
+				}, nee: {
+					startknop klik.
+				}.
+			}.
+		}.
+		media wekker: 10 over: 9000.	
+	}.
+	
+	media scherm: ['titelscherm.png'].
+	startknop bij: ['klik'] doen: { <- Niets. }.
+	citrine bij: ['klik'] doen: { <- Niets. }.
+	bobby bij: ['klik'] doen: { <- Niets. }.
+	media wekker: 10 over: -1.
+	levens := 3.
+	
+	level := 1.
+	#koffers teller: 6.
+	
+	punten := 0.
+	bordpunten := 0.
+	score inkt: oranje, schrijf: bordpunten.
+	{
+		level = 1 ja: {
+			koffers start.	
+		}, anders: {
+			media bij: ['start'] doen: {
+				plaatjes zichtbaar: Nee.
+				level-einde afspelen.
+				media wekker: 5 over: 4000.
+			}, scherm: ['compleet.png'].
+		}.
+		
+		media bij: ['toets:'] doen: { :toets
+			(toets = ['Escape']) ja: { limiet := -5. }.
+		}, bij: ['start'] doen: {		
+			Spel niveau: level.
+		}.
+		Spel start: level.
+	} zolang: { 
+		<- ((levens > 0) en: (level < 5)).
+	}.
+	punten > topscore ja: {
+		topscore := punten.
+	}.
+	(level = 5) ja: {
+		Spel einde.
+	}, anders: {
+		media bij: ['start'] doen: {		
+			plaatjes zichtbaar: Nee.
+			media wekker: 5 over: 5000.
+		}.
+		(levens = 0) ja: {
+			muziek := Muziek nieuw: ['gameover.mp3'], 
+			afspelen.	
+			media scherm: ['gameover.png'].			
+		}.
+	}.
+} zolang: {
+	<- Ja.
+}.
